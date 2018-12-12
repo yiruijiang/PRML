@@ -31,3 +31,33 @@ class SigmoidalFeatures(object):
             # in this case coef is a ndarray
             assert coef.ndim == 1
             assert np.size(mean, 1) == len(coef)
+        self.__mean = mean
+        self.__coef = coef
+
+    def __sigmoid(self, x, mean):
+        return 0
+
+    def transform(self, x):
+        """
+        transform the input array with sigmoidal features
+
+        Parameters
+        ----------
+        x: (sample_size, ndim) or (sample_size,) ndarray
+            input array
+
+        Returns
+        -------
+        output: (sample_size, n_features) ndarray
+            sigmoidal features
+        """
+
+        if x.ndim == 1:
+            x = x[:, None]
+        else:
+            assert x.ndim == 2
+        assert np.size(x, axis = 1) == np.size(self.__mean, axis = 1)
+        basis = [np.ones(len(x))]
+        for m in self.__mean:
+            basis.append(self.__sigmoid(x, m))
+        return np.asarray(basis).transpose()
